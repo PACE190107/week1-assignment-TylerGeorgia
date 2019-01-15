@@ -1,6 +1,8 @@
 package com.revature.eval.java.core;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.time.temporal.Temporal;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -685,8 +687,9 @@ public class EvaluationService {
 	 * @return
 	 */
 	public boolean isValidIsbn(String string) {
-		// TODO Write an implementation for this method declaration
+		
 		string = string.toUpperCase();
+		string = string.replaceAll(" ", "");
 		string = string.replaceAll("[^0-9X]", "");
 		System.out.println(string);
 		char[] numbers = string.toCharArray();
@@ -702,6 +705,7 @@ public class EvaluationService {
 				}else {
 					sum = sum + (Integer.parseInt(""+c) * multiple);
 				}	
+				multiple--;
 			}
 			
 			if(sum%11 == 0)
@@ -755,10 +759,19 @@ public class EvaluationService {
 	 */
 	public Temporal getGigasecondDate(Temporal given) {
 		//given = given.plus(1000000000,  ); 
-		return null;
+		LocalDateTime myDateTime;
+		if(given.isSupported(ChronoUnit.SECONDS)) {
+			myDateTime = (LocalDateTime) given;
+		}else {
+			myDateTime = LocalDateTime.of(((LocalDate)given).getYear(), ((LocalDate)given).getMonth(), ((LocalDate)given).getDayOfMonth(), 0, 0);
+		}
+		
+		myDateTime = myDateTime.plusSeconds(1000000000);
+		
+		return myDateTime;
 	}
 
-	/**
+	/*
 	 * 18. Given a number, find the sum of all the unique multiples of particular
 	 * numbers up to but not including that number.
 	 * 
@@ -772,7 +785,6 @@ public class EvaluationService {
 	 * @return
 	 */
 	public int getSumOfMultiples(int i, int[] set) {
-		// TODO Write an implementation for this method declaration
 		int sum = 0;
 		List<Integer> allMultiples = new ArrayList<Integer>();
 		
@@ -837,7 +849,7 @@ public class EvaluationService {
 		if(string.length()<1) {
 			throw new IllegalArgumentException();
 		}
-		string = string.replaceAll("[^0-9A-Za-z]", "");
+		string = string.replace(" ", "");
 		int numCount = string.length();
 		string = string.replaceAll("[^0-9]", "");
 		if(numCount != string.length()) {
